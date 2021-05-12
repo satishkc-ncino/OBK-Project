@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : Satish Chandrashekar
  * @group             : 
- * @last modified on  : 05-09-2021
+ * @last modified on  : 05-12-2021
  * @last modified by  : Satish Chandrashekar
  * Modifications Log 
  * Ver   Date         Author                 Modification
@@ -66,7 +66,7 @@ public with sharing class CreateEmailtoLeadTest {
         System.assertEquals(testtask.Subject , 'TestForLead', 'Task Created Successfully');
     }
 
-    @isTest
+    @isTest (SeeAllData = True)
     private static void duplicateContact(){
         Contact newContact = new Contact(
         Email = 'TestLead@gmail.com', 
@@ -89,12 +89,13 @@ public with sharing class CreateEmailtoLeadTest {
         WHERE Email = 'TestLead@gmail.com' WITH Security_Enforced LIMIT 1];
         System.Debug('Contact Size is' + testContact.size());
         Id cid = testContact[0].Id;
-
+        //Task chkTask = [SELECT ID, WhoId, Subject FROM Task WHERE WhoId =:cid WITH SECURITY_ENFORCED ORDER BY CreatedDate Desc LIMIT 1];
+        
         Task[] newTask = new Task[0];
-        newTask.add(new Task(Description = 'myPlainText',
+        newTask.add(new Task(Description = email.plainTextBody,
         Priority = 'Normal',
         Status = 'Inbound Email',
-        Subject = 'TestForLead',
+        Subject = email.subject,
         IsReminderSet = true,
         ReminderDateTime = System.now()+1,
         WhoId = newContact.Id));
@@ -102,6 +103,7 @@ public with sharing class CreateEmailtoLeadTest {
         Task testtask = [SELECT ID,WhoId, Subject FROM Task WHERE WhoId =: cid WITH SECURITY_ENFORCED ORDER BY CreatedDate DESC LIMIT 1];
         System.assertEquals(result.success, true, 'Test Success');
         System.assertEquals(testtask.Subject , 'TestForLead', 'Task Created Successfully');
+        //System.assertEquals(chkTask.Subject , email.subject, 'Task Created Successfully');
     }
 
     @isTest

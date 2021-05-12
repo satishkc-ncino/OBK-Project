@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : Satish Chandrashekar
  * @group             : 
- * @last modified on  : 05-09-2021
+ * @last modified on  : 05-12-2021
  * @last modified by  : Satish Chandrashekar
  * Modifications Log 
  * Ver   Date         Author                 Modification
@@ -17,6 +17,9 @@ global with sharing class CreateEmailtoLead implements Messaging.InboundEmailHan
         String myPlainText= '';
         String fromid = email.fromAddress;
         myPlainText = email.plainTextBody;
+        String infomail = 'infoobkau@2ydwid7iqzb5s4vqzmdxauhf1j9jeeu86yfqyy0u7g7cyww70y.9d-8cruuaq.cs76.apex.sandbox.salesforce.com';
+        String enqmail = 'enqoobkau@5-1zqeo8b69j9hgp4p91kkzjaoraomkygto2ujil2sxzall03bz0.9d-8cruuaq.cs76.apex.sandbox.salesforce.com';
+
 
         // Logic 1: Check for existing leads with this email address 
         try{
@@ -30,11 +33,23 @@ global with sharing class CreateEmailtoLead implements Messaging.InboundEmailHan
                 Contact[] con = [SELECT Id, Name, Email FROM Contact WHERE Email =: email.fromAddress WITH Security_Enforced LIMIT 1];
                 System.debug(con.size());
                 if(con.size() == 0){
+                    String toadd = env.toAddress;
+                    String type;
+                    if(toadd == infomail){
+                        type = 'General';
+                    }
+                    else if(toadd == enqmail){
+                        type = 'Custom Event';
+                    }
+
                     // Insert a new lead
                     if(Schema.SObjectType.Lead.isCreateable()){
                         Lead newLead = new Lead(Email = email.fromAddress, 
-                        LastName = 'From Email', 
-                        Company = 'From Email');
+                        LastName = email.fromName, 
+                        Company = 'From Email',
+                        LeadSource = 'Email',
+                        Enquiry_Type__c = type, 
+                        Description = myPlainText);
                         insert newLead;
                     }
                 }
