@@ -54,22 +54,6 @@ private with sharing class CreateEmailtoLeadLiteTest {
         CreateEmailtoLeadLite emailServiceObj = new CreateEmailtoLeadLite();
         Messaging.InboundEmailResult result = emailServiceObj.handleInboundEmail(email, env);
         Test.stopTest();
-
-
-        /*Task[] newTask = new Task[0];
-        newTask.add(new Task(Description = 'myPlainText',
-        Priority = 'Normal',
-        Status = 'Inbound Email',
-        Subject = 'TestForLead',
-        IsReminderSet = true,
-        ReminderDateTime = System.now()+1,
-        WhoId = newLead.Id));
-        insert newTask;
-
-        Task testtask = [SELECT ID,WhoId, Subject FROM Task WHERE WhoId =: lid WITH SECURITY_ENFORCED ORDER BY CreatedDate DESC LIMIT 1];
-        System.Debug(testtask.Id + testtask.Subject);
-        System.assertEquals(result.success, true, 'Test Success');
-        System.assertEquals(testtask.Subject , 'TestForLead', 'Task Created Successfully'); */
     }
 
     
@@ -106,11 +90,10 @@ private with sharing class CreateEmailtoLeadLiteTest {
         LastName = 'Testing Admin');
         insert newContact;
 
-        Contact[] testContact = [SELECT Id, Name, Email
+        Contact testContact = [SELECT Id, Name, Email
         FROM Contact
         WHERE Email = 'TestLead@gmail.com' WITH Security_Enforced LIMIT 1];
-        System.Debug('Contact Size is' + testContact.size());
-        Id cid = testContact[0].Id;
+        Id cid = testContact.Id;
 
         Messaging.InboundEmail email = new Messaging.InboundEmail();
         Messaging.InboundEnvelope env = new Messaging.InboundEnvelope();
@@ -124,22 +107,6 @@ private with sharing class CreateEmailtoLeadLiteTest {
         CreateEmailtoLeadLite emailServiceObj = new CreateEmailtoLeadLite();
         Messaging.InboundEmailResult result = emailServiceObj.handleInboundEmail(email, env);
         Test.stopTest();
-        
-        //Task chkTask = [SELECT ID, WhoId, Subject FROM Task WHERE WhoId =:cid WITH SECURITY_ENFORCED ORDER BY CreatedDate Desc LIMIT 1];
-        
-        /*Task[] newTask = new Task[0];
-        newTask.add(new Task(Description = email.plainTextBody,
-        Priority = 'Normal',
-        Status = 'Inbound Email',
-        Subject = email.subject,
-        IsReminderSet = true,
-        ReminderDateTime = System.now()+1,
-        WhoId = newContact.Id));
-        insert newTask; 
-        Task testtask = [SELECT ID,WhoId, Subject FROM Task WHERE WhoId =: cid WITH SECURITY_ENFORCED ORDER BY CreatedDate DESC LIMIT 1];
-        System.assertEquals(result.success, true, 'Test Success');
-        System.assertEquals(testtask.Subject , 'TestForLead', 'Task Created Successfully');
-        //System.assertEquals(chkTask.Subject , email.subject, 'Task Created Successfully');*/
     }
 
 }

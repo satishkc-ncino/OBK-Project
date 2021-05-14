@@ -77,7 +77,7 @@ global with sharing class CreateEmailtoLeadLite implements Messaging.InboundEmai
                         WhoId = con[0].Id));
                         // Insert the new Task 
                         insert newTask;
-                        System.debug('New Task Object: ' + newTask );
+                        System.debug('New Task Object: ' + newTask);
                     }
                 }
                 
