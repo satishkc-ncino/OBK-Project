@@ -2,7 +2,7 @@
  * @description       : Enhanced version of Email to Lead Handler class which creates leads from incomming emails.
  * @author            : Satish Chandrashekar
  * @group             : 
- * @last modified on  : 05-13-2021
+ * @last modified on  : 06-02-2021
  * @last modified by  : Satish Chandrashekar
  * Modifications Log 
  * Ver   Date         Author                 Modification
@@ -22,8 +22,13 @@ global with sharing class CreateEmailtoLeadLite implements Messaging.InboundEmai
 
         //Logic to extract the Lead Queue 
         //Change this to Custom Metadata Settings.
-        String infomail = 'infoobkau@2ydwid7iqzb5s4vqzmdxauhf1j9jeeu86yfqyy0u7g7cyww70y.9d-8cruuaq.cs76.apex.sandbox.salesforce.com';
+        //String infomail = 'infoobkau@2ydwid7iqzb5s4vqzmdxauhf1j9jeeu86yfqyy0u7g7cyww70y.9d-8cruuaq.cs76.apex.sandbox.salesforce.com';
         String enqmail = 'enqoobkau@5-1zqeo8b69j9hgp4p91kkzjaoraomkygto2ujil2sxzall03bz0.9d-8cruuaq.cs76.apex.sandbox.salesforce.com';
+
+        obk_EmailtoLead__mdt[] eIds = [SELECT ID, MasterLabel, SF_Email_Id__c FROM obk_EmailtoLead__mdt WHERE Label = 'InfoMailbox'];
+        String infomail = eIds[0].SF_EMAIL_ID__c;
+        System.Debug(infomail);
+
 
 
         // Logic: Check for existing leads with this email address 
@@ -61,7 +66,7 @@ global with sharing class CreateEmailtoLeadLite implements Messaging.InboundEmai
                         insert newLead;
                     }
                 }
-                else{
+                else if(con.size() > 0){
 
                     if(Schema.SObjectType.Task.isCreateable() && Schema.SObjectType.Contact.isUpdateable()){
                         System.debug('Incoming email duplicates existing Contact record(s): ' + con );
@@ -82,7 +87,7 @@ global with sharing class CreateEmailtoLeadLite implements Messaging.InboundEmai
                 }
                 
             }
-            else 
+            else if(leads.size()>0)
             {
                 System.debug('Incoming email duplicates existing Lead record(s): ' + leads );
                 //Update Lead with new info

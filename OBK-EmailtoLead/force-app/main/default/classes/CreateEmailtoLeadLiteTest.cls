@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : Satish Chandrashekar
  * @group             : 
- * @last modified on  : 05-13-2021
+ * @last modified on  : 05-16-2021
  * @last modified by  : Satish Chandrashekar
  * Modifications Log 
  * Ver   Date         Author                 Modification
@@ -21,37 +21,36 @@ private with sharing class CreateEmailtoLeadLiteTest {
         env.toAddress = 'abc@123.in.salesforce.com';
         email.fromName = 'Testing Admin';
         
-        Test.startTest();
         CreateEmailtoLeadLite emailServiceObj = new CreateEmailtoLeadLite();
+        
+        Test.startTest();
         Messaging.InboundEmailResult result = emailServiceObj.handleInboundEmail(email, env);
-        //System.assertEquals(result.success, true, 'Test Success');
+        System.assertEquals(result.success, true, 'Test Success');
         Test.stopTest();
     }
     
     @isTest (SeeAllData = true)
     private static void duplicateLead(){
-        Lead newLead = new Lead(
+        /*Lead newLead = new Lead(
         Email = 'TestLead@gmail.com', 
         LastName = 'Testing Admin', 
         Company = 'From Email');
-        insert newLead;
+        insert newLead;*/
 
         Messaging.InboundEmail email = new Messaging.InboundEmail();
         Messaging.InboundEnvelope env = new Messaging.InboundEnvelope();
         email.subject = 'TestForLead';
         email.plainTextBody = 'myPlainText';
-        env.fromAddress = 'TestLead@gmail.com';
+        env.fromAddress = 'satish.chandrashekar@ncino.com';
         env.toAddress = 'abc@123.in.salesforce.com';
         email.fromName = 'Testing Admin';
 
-        Lead[] testLead = [SELECT Id, Name, Email
-        FROM Lead
-        WHERE Email = 'TestLead@gmail.com' WITH Security_Enforced LIMIT 1];
+        /*Lead[] testLead = [SELECT Id, Name, Email FROM Lead WHERE Email = 'TestLead@gmail.com'];
         System.Debug('Lead Size is' + testLead.size());
-        Id lid = testLead[0].Id;
+        Id lid = testLead[0].Id;*/
 
-        Test.startTest();
         CreateEmailtoLeadLite emailServiceObj = new CreateEmailtoLeadLite();
+        Test.startTest();
         Messaging.InboundEmailResult result = emailServiceObj.handleInboundEmail(email, env);
         Test.stopTest();
     }
@@ -83,30 +82,77 @@ private with sharing class CreateEmailtoLeadLiteTest {
         Test.stopTest(); 
     }
 
-    @isTest(SeeAllData = true)
+    @isTest (SeeAllData = true)
     private static void duplicateContact(){
-        Contact newContact = new Contact(
+        
+        /* List<Contact> conlist = new List<Contact>();
+
+        Contact con1 = new Contact(
         Email = 'TestLead@gmail.com', 
         LastName = 'Testing Admin');
-        insert newContact;
+        conlist.add(con1);
 
-        Contact testContact = [SELECT Id, Name, Email
-        FROM Contact
-        WHERE Email = 'TestLead@gmail.com' WITH Security_Enforced LIMIT 1];
-        Id cid = testContact.Id;
+        Contact con2 = new Contact(
+        Email = 'SKCTestLead@gmail.com', 
+        LastName = 'SKCTesting Admin');
+        conlist.add(con2);
+
+        insert conlist; */
 
         Messaging.InboundEmail email = new Messaging.InboundEmail();
         Messaging.InboundEnvelope env = new Messaging.InboundEnvelope();
         email.subject = 'TestForLead';
         email.plainTextBody = 'myPlainText';
-        env.fromAddress = 'TestLead@gmail.com';
+        env.fromAddress = 'satish.chandrashekar@ncino.com';
         env.toAddress = 'abc@123.in.salesforce.com';
         email.fromName = 'Testing Admin';
 
-        Test.startTest();
+        /* List<Contact> testContact = [SELECT Id, Name, Email FROM Contact WHERE Email = 'satish.chandrashekar@ncino.com'];
+        Integer cid = testContact.size(); */
+        
         CreateEmailtoLeadLite emailServiceObj = new CreateEmailtoLeadLite();
+        Test.startTest();
         Messaging.InboundEmailResult result = emailServiceObj.handleInboundEmail(email, env);
         Test.stopTest();
     }
 
+    @isTest (SeeAllData = true)
+    private static void duplicateContact1(){
+        Profile p = [SELECT Id FROM Profile WHERE Name='System Administrator']; 
+        User u = new User(Alias = 'sysadmin', Email='sysadmin@playful-koala-lqrcxl-dev-ed.com', 
+        EmailEncodingKey='UTF-8', LastName='Testing', LanguageLocaleKey='en_US', 
+        LocaleSidKey='en_US', ProfileId = p.Id, 
+        TimeZoneSidKey='America/Los_Angeles', UserName='sysadmin@playful-koala-lqrcxl-dev-ed.com'); 
+        
+
+        List<Contact> conlist = new List<Contact>();
+
+        Contact con1 = new Contact(
+        Email = 'TestLead@gmail.com', 
+        LastName = 'Testing Admin');
+        conlist.add(con1);
+
+        Contact con2 = new Contact(
+        Email = 'SKCTestLead@gmail.com', 
+        LastName = 'SKCTesting Admin');
+        conlist.add(con2);
+
+        insert conlist; 
+
+        Messaging.InboundEmail email = new Messaging.InboundEmail();
+        Messaging.InboundEnvelope env = new Messaging.InboundEnvelope();
+        email.subject = 'TestForLead';
+        email.plainTextBody = 'myPlainText';
+        env.fromAddress = 'satish.chandrashekar@ncino.com';
+        env.toAddress = 'abc@123.in.salesforce.com';
+        email.fromName = 'Testing Admin';
+
+        Test.startTest();
+        System.runAs(u){
+        CreateEmailtoLeadLite emailServiceObj = new CreateEmailtoLeadLite();
+        Messaging.InboundEmailResult result = emailServiceObj.handleInboundEmail(email, env);
+        System.assertEquals(true, result.success, 'Task Created for Contact'); 
+        }
+        Test.stopTest();
+    }
 }
