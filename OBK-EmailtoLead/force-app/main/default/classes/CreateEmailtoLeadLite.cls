@@ -2,7 +2,7 @@
  * @description       : Enhanced version of Email to Lead Handler class which creates leads from incomming emails.
  * @author            : Satish Chandrashekar
  * @group             : 
- * @last modified on  : 06-02-2021
+ * @last modified on  : 07-01-2021
  * @last modified by  : Satish Chandrashekar
  * Modifications Log 
  * Ver   Date         Author                 Modification
@@ -59,7 +59,7 @@ global with sharing class CreateEmailtoLeadLite implements Messaging.InboundEmai
                     LastName = email.fromName, 
                     Company = 'From Email',
                     LeadSource = 'Email',
-                    Enquiry_Type__c = type, 
+                    Enquiry_Type_Queue__c = type, 
                     Description = myPlainText);
                     if(Schema.SObjectType.Lead.isCreateable()){
                         newLead.setOptions(dmlopts);
@@ -92,9 +92,9 @@ global with sharing class CreateEmailtoLeadLite implements Messaging.InboundEmai
                 System.debug('Incoming email duplicates existing Lead record(s): ' + leads );
                 //Update Lead with new info
                 if(Schema.SObjectType.Task.isCreateable() && Schema.SObjectType.Lead.isUpdateable()){
-                    Lead updatelead = [SELECT Id, Description,Enquiry_Type__c, LeadSource  FROM Lead WHERE Id =: leads[0].Id];
+                    Lead updatelead = [SELECT Id, Description,Enquiry_Type__c, LeadSource, Enquiry_Type_Queue__c  FROM Lead WHERE Id =: leads[0].Id];
                     updatelead.Description = updatelead.Description + '\n' + 'New Update :'+ myPlainText;
-                    updatelead.Enquiry_Type__c = String.isBlank(updatelead.Enquiry_Type__c) ? 'General' : updatelead.Enquiry_Type__c ; 
+                    updatelead.Enquiry_Type_Queue__c = String.isBlank(updatelead.Enquiry_Type_Queue__c) ? 'General' : updatelead.Enquiry_Type_Queue__c ; 
                     updatelead.LeadSource = String.isBlank(updatelead.LeadSource) ? 'Email' : updatelead.LeadSource;
                     
                     update updatelead;
