@@ -2,7 +2,7 @@
  * @description       : Enhanced version of Email to Lead Handler class which creates leads from incomming emails.
  * @author            : Satish Chandrashekar
  * @group             : 
- * @last modified on  : 07-01-2021
+ * @last modified on  : 07-04-2021
  * @last modified by  : Satish Chandrashekar
  * Modifications Log 
  * Ver   Date         Author                 Modification
@@ -10,7 +10,6 @@
 **/
 global with sharing class CreateEmailtoLeadLite implements Messaging.InboundEmailHandler{
     
-    //Function with Logic to map to the default Owner
     global Messaging.InboundEmailResult handleInboundEmail(Messaging.inboundEmail email, Messaging.InboundEnvelope env)
     {
         // Create an InboundEmailResult object for returning the result of the Apex Email Service 
@@ -125,3 +124,4 @@ global with sharing class CreateEmailtoLeadLite implements Messaging.InboundEmai
     return result;
     }
 }
+
