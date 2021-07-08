@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : Satish Chandrashekar
  * @group             : 
- * @last modified on  : 07-07-2021
+ * @last modified on  : 07-09-2021
  * @last modified by  : Satish Chandrashekar
  * Modifications Log 
  * Ver   Date         Author                 Modification
@@ -138,11 +138,13 @@ private with sharing class EmailtoLeadExtendedTest {
         email.fromName = 'Testing Admin';
         String originalMail = 'satish.chandrashekar@ncino.com';
         
+        EmailtoLeadExtended emailServiceObj = new EmailtoLeadExtended();
+        
         Test.startTest();
-            System.runAs(u){
-            EmailtoLeadExtended emailServiceObj = new EmailtoLeadExtended();
+            System.runAs(u){    
             Messaging.InboundEmailResult result = emailServiceObj.handleInboundEmail(email, env);
-            System.assertEquals(true, result.success, 'Query Exception'); 
+            System.assertEquals(true, result.success, 'Forward Value');
+
             }
         Test.stopTest(); 
     }
