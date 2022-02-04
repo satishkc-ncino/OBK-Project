@@ -2,11 +2,13 @@
  * @description       : 
  * @author            : Satish Chandrashekar
  * @group             : 
- * @last modified on  : 07-09-2021
+ * @last modified on  : 10-12-2021
  * @last modified by  : Satish Chandrashekar
  * Modifications Log 
  * Ver   Date         Author                 Modification
  * 1.0   07-05-2021   Satish Chandrashekar   Initial Version
+ * 1.1   15-08-2021   Satish Chandrashekar   Donation Logic Test Methods
+ * 1.2   12-10-2021   Satish Chandrashekar   Deprecated Donation Logic Test
 **/
 
 @isTest
@@ -149,85 +151,29 @@ private with sharing class EmailtoLeadExtendedTest {
         Test.stopTest(); 
     }
 
-    /* @isTest 
-    private static void duplicateContact(){
-        List<Contact> conlist = new List<Contact>();
-
-        Contact con1 = new Contact(
-        Email = 'TestLead@gmail.com', 
-        LastName = 'Testing Admin');
-        conlist.add(con1);
-
-        Contact con2 = new Contact(
-        Email = 'SKCTestLead@gmail.com', 
-        LastName = 'SKCTesting Admin');
-        conlist.add(con2);
-
-        insert conlist; 
-
-        Messaging.InboundEmail email = new Messaging.InboundEmail();
-        Messaging.InboundEnvelope env = new Messaging.InboundEnvelope();
-        email.subject = 'TestForLead';
-        email.plainTextBody = 'myPlainText';
-        env.fromAddress = 'TestLead@gmail.com';
-        env.toAddress = 'abc@123.in.salesforce.com';
-        email.fromName = 'Testing Admin';
-
-        Test.startTest();
-        
-        EmailtoLeadExtended emailServiceObj = new EmailtoLeadExtended();
-        Messaging.InboundEmailResult result = emailServiceObj.handleInboundEmail(email, env);
-        System.assertEquals(true, result.success, 'Task Created for Contact'); 
-        
-        Test.stopTest();
-    }
-
+    /* Deprecating Unused Test Methods
     @isTest
-    private static void directLead(){
-        
+    private static void donationsLogicTest(){
+        User u = TestDataFactory.createUser('Admin');
+
         Messaging.InboundEmail email = new Messaging.InboundEmail();
         Messaging.InboundEnvelope env = new Messaging.InboundEnvelope();
         email.subject = 'TestForLead';
-        email.plainTextBody = 'myPlainText';
-        env.fromAddress = 'TestLead@gmail.com';
+        email.plainTextBody = TestDataFactory.donationemailtest();
+        env.fromAddress = 'notifications@typeform.com';
         env.toAddress = 'abc@123.in.salesforce.com';
         email.fromName = 'Testing Admin';
-
-        EmailtoLeadExtended emailServiceObj = new EmailtoLeadExtended();
-        
-        //Insert User with SysAdmin Profile.
-        Profile p = [SELECT Id FROM Profile WHERE Name='System Administrator']; 
-        User u = new User(Alias = 'sysadmin', Email='sysadmin@playful-koala-lqrcxl-dev-ed.com', 
-            EmailEncodingKey='UTF-8', LastName='Testing', LanguageLocaleKey='en_US', 
-            LocaleSidKey='en_US', ProfileId = p.Id, 
-            TimeZoneSidKey='America/Los_Angeles', UserName='sysadmin@playful-koala-lqrcxl-dev-ed.com'); 
-        insert u;
-
-
-        System.runAs(u){
-            Test.startTest();
-            Messaging.InboundEmailResult result = emailServiceObj.handleInboundEmail(email, env);
-            System.assertEquals(result.success, true, 'Test Success');
-            Test.stopTest();
-        }        
-    }
-
-    @isTest 
-    private static void forwardlead(){
-        Messaging.InboundEmail email = new Messaging.InboundEmail();
-        Messaging.InboundEnvelope env = new Messaging.InboundEnvelope();
-        email.subject = 'TestForLead';
-        email.plainTextBody = '(\n ________________________________\n From: Satish Krishnamurthy Chandrashekar <satish.chandrashekar@ncino.com>\n Sent: Friday, 2 July 2021 5:34:18 PM (UTC+10:00) Canberra, Melbourne, Sydney\n To: Info <info@obk.org.au>/n Subject: Test Body of Email - 2\n \n \n FIRST UAT TEST MAIL)';
-        env.fromAddress = 'info@obk.org.au';
-        env.toAddress = 'abc@123.in.salesforce.com';
-        email.fromName = 'Testing Admin';
+        String originalMail = 'satish.chandrashekar@ncino.com';
         
         EmailtoLeadExtended emailServiceObj = new EmailtoLeadExtended();
         
         Test.startTest();
-        Messaging.InboundEmailResult result = emailServiceObj.handleInboundEmail(email, env);
-        System.assertEquals(result.success, true, 'Test Success');
-        Test.stopTest();
-    }*/
+            System.runAs(u){    
+            Messaging.InboundEmailResult result = emailServiceObj.handleInboundEmail(email, env);
+            System.assertEquals(true, result.success, 'Donation Email Success');
+
+            }
+        Test.stopTest(); 
+    } */
 
 }

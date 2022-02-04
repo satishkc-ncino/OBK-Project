@@ -2,11 +2,13 @@
  * @description       : 
  * @author            : Satish Chandrashekar
  * @group             : 
- * @last modified on  : 07-08-2021
+ * @last modified on  : 10-12-2021
  * @last modified by  : Satish Chandrashekar
  * Modifications Log 
  * Ver   Date         Author                 Modification
  * 1.0   07-03-2021   Satish Chandrashekar   Initial Version
+ * 1.1   15-08-2021   Satish Chandrashekar   Added the Donation Capture Logic
+ * 1.2   12-10-2021   Satish Chandrashekar   Deprecated the Donation Email Capture Logic and Added logic to duplicateCheck function
 **/
 public with sharing class EmailtoLeadHandler {
     
@@ -20,17 +22,18 @@ public with sharing class EmailtoLeadHandler {
 
     
     /* Function to Check Duplicate Lead or Contact*/
+    //Change Log: 12-Oct-2021 : Added IsConverted and IsDeleted in SOQL Query WHERE Clasuse for both Lead and Contact
     public static String duplicateCheck(Map<String,String> details, String type){
         String tempid = details.get('Email');
         String msg;
         try{
-            Lead[] leads = [SELECT Id, Name, Email, OwnerId
+            Lead[] leads = [SELECT Id, Name, Email, OwnerId, IsConverted, IsDeleted
             FROM Lead
-            WHERE Email = :tempid WITH Security_Enforced LIMIT 1];
+            WHERE Email = :tempid AND IsConverted = false AND IsDeleted = false WITH Security_Enforced LIMIT 1];
             System.debug(leads.size());
 
             if(leads.size() == 0){
-                Contact[] con = [SELECT Id, Name, Email, OwnerId FROM Contact WHERE Email =: tempid WITH Security_Enforced LIMIT 1];
+                Contact[] con = [SELECT Id, Name, Email, OwnerId, IsDeleted FROM Contact WHERE Email =: tempid AND IsDeleted = false WITH Security_Enforced LIMIT 1];
                 if(con.size() == 0){
                     createLead(details, type);
                     msg = 'Lead Created';    
@@ -124,6 +127,66 @@ public with sharing class EmailtoLeadHandler {
         return fresults;           
         
     }
+
+    // Function to map the Donations Email from Typeform
+    // Extract the Email Body and get the details of the original Email and hydrate details to create a lead & Task
+    //Decision was made to Discard this Development - Hence hiding this code
+    /*public static Map<String,String> donationsLogic(Messaging.inboundEmail email){
+        
+        String dfName;
+        String dlName;
+        String dcompany;
+        String dsubject;
+        String ddescription;
+        String deMailId;
+        Map<String,String> dresults = new Map<String,String>();
+
+        List<String> finallist = new List<String>();
+        String[] emailBodyRows = email.plaintextbody.split('\n');
+        System.Debug(emailBodyRows);
+        string[] rowContents;
+        integer counter;
+        Map<String,String> countermap = new Map<String,String>();
+        for (String bodyRow:emailBodyRows) {
+                        rowContents = bodyRow.split('\\*');
+                        System.Debug(JSON.serializePretty(rowContents));
+                        counter = rowContents.size();
+                        System.Debug(counter);	
+        }
+
+        for(String row:rowContents){
+            string value = row.trim();
+            integer full = value.length();
+            integer s = value.lastindexOf('?');
+            integer co = full - (s+1);
+            String finalval = value.right(co);
+            System.Debug(finalval);
+            finallist.add(finalval);
+        }
+
+        dfName = finallist[1];
+        dlName = finallist[2];
+        String temp = finallist[6]; 
+        System.debug(temp);
+        integer c1 = temp.lastIndexOf('<');
+        deMailId = temp.left(c1);
+        dcompany = finallist[1] + ' ' + finallist[2];
+        dsubject = finallist[0];
+        ddescription = finallist[3] + '\n' + finallist[4] + '\n'  + finallist[5] + '\n' + finallist[7];
+
+
+        dresults.put('FirstName', dfName);
+        dresults.put('LastName', dlName);
+        dresults.put('Email', deMailId);
+        dresults.put('Company', dcompany);
+        dresults.put('Subject', dsubject);
+        dresults.put('Description', ddescription);
+            
+        System.debug(JSON.serializePretty(dresults));
+        return dresults;
+
+    } */
+
 
     // Function to map the lead Fields for Direct Email Logic directly from the Email Inbound Message Service
     public static Map<String,String> directEmailLogic(Messaging.inboundEmail email){

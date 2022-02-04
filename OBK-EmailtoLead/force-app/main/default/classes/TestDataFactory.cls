@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : Satish Chandrashekar
  * @group             : 
- * @last modified on  : 07-07-2021
+ * @last modified on  : 08-15-2021
  * @last modified by  : Satish Chandrashekar
  * Modifications Log 
  * Ver   Date         Author                 Modification
@@ -128,5 +128,25 @@ public with sharing class TestDataFactory {
         return newTask;
     }
 
+    public static String donationemailtest(){
+        String str = 'Your typeform Nonprofit donation form has a new response:';
+        str += '* Hi there, supporter. What\'s your first name?';
+        str += 'Satish';
+        str +='* And your last name?';
+        str +='Chandrashekar';
+        str += '* We\'re very grateful you\'re here to donate, Laurie. How much would you like to give today?';
+        str += '150';
+        str += '* You can easily complete your donation in the form below. All you need is a credit card.';
+        str += 'Payment of 150.00 from Laurie Terrasa with card ending xxxx was successful.';
+        str += '* Donation comments';
+        str += 'I am a greatful to OBK and salute their dedication to serve ! I loved volunteering and I am so grateful for the meals delivered';
+        str += '* Thanks so much, Satish. We\'ll send you the receipt by email. What email address can we use?';
+        str += 'satish.chandrashekar@ncino.com<mailto:satish.chandrashekar@ncino.com>';
+        str += '* Score';
+        str += '10';
+        str += 'dtou3zrdb9yy4kdkdyymdtou3za6qtdq';
+        str += 'Typeform sent you this email on behalf of a typeform creator. We aren\'t responsible for its content. If you suspect abuse, like suspicious links, please report it here<https://www.typeform.com/help/report-abuse/>.';
 
+        return str;
+    }
 }

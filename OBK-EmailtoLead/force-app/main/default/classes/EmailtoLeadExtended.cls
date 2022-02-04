@@ -2,11 +2,13 @@
  * @description       : 
  * @author            : Satish Chandrashekar
  * @group             : 
- * @last modified on  : 07-08-2021
+ * @last modified on  : 10-12-2021
  * @last modified by  : Satish Chandrashekar
  * Modifications Log 
  * Ver   Date         Author                 Modification
  * 1.0   07-04-2021   Satish Chandrashekar   Initial Version
+ * 1.1   15-08-2021   Satish Chandrashekar   Added the Donation Capture Logic
+ * 1.2   12-10-2021   Satish Chandrashekar   Deprecated the Donation Email Capture Logic and Added logic to duplicateCheck function
 **/
 global with sharing class EmailtoLeadExtended implements Messaging.InboundEmailHandler{
 
@@ -46,8 +48,25 @@ global with sharing class EmailtoLeadExtended implements Messaging.InboundEmailH
             System.Debug(qe);
         }
 
-        forwardTrue = domain.contains(fromid); //Verify if the incoming email is from OBK Domain or External
-        string fwd = string.valueOf(forwardTrue); //Converting the Boolean to String
+       //logic to seperate the Inbound Donations & Other Emails
+        String don = 'notifications@typeform.com';
+        String info = 'info@obk.org.au';
+        String event = 'events@obk.org.au';
+        String fwd;
+        //forwardTrue = domain.contains(fromid); //Verify if the incoming email is from OBK Domain or External
+        
+        /*if(fromid == don){
+            fwd = 'don';
+        }
+        else */
+        if(fromid == info || fromid == event){
+            fwd = 'true';
+        }
+        else{
+            fwd = 'false';
+        }
+        //string fwd = string.valueOf(forwardTrue); //Converting the Boolean to String
+
 
         //Verification of TOID and Switch to determine the queue for Lead
         Boolean b = tomailcheck.containskey(toid);
@@ -75,7 +94,13 @@ global with sharing class EmailtoLeadExtended implements Messaging.InboundEmailH
                 directMsg = EmailtoLeadHandler.directEmailLogic(email);
                 EmailtoLeadHandler.duplicateCheck(directMsg, enqType); //This will complete duplicate check and Create Lead / Task accordingly.
             }
+            /*when 'don'{
+                //Send details to hyderate and create lead or contact or task under contact
+                forwardMsg = EmailtoLeadHandler.donationsLogic(email);
+                EmailtoLeadHandler.duplicateCheck(forwardMsg, enqType);
+            }*/
         }
+
 
     // Set the result to true. No need to send an email back to the user with an error message 
     result.success = true;
