@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : Satish Chandrashekar
  * @group             : 
- * @last modified on  : 02-04-2022
+ * @last modified on  : 02-05-2022
  * @last modified by  : Satish Chandrashekar
 **/
 import { LightningElement, wire, track, api } from 'lwc';
@@ -11,7 +11,6 @@ import {NavigationMixin} from "lightning/navigation";
 
 
 export default class LwcDonations extends NavigationMixin(LightningElement) {
-
 
     //Automate the Link for Next Release
     /*  @api paylink;
@@ -44,12 +43,13 @@ export default class LwcDonations extends NavigationMixin(LightningElement) {
 
 
     handleRedirect() {
-        this[NavigationMixin.Navigate]({
+        window.location.replace('https://buy.stripe.com/test_4gwg1e0VT1LNdz2fYY');
+        /* this[NavigationMixin.Navigate]({
             type : 'standard__webPage',
             attributes: {
                 //url : this.paylink
                 url : 'https://buy.stripe.com/test_4gwg1e0VT1LNdz2fYY'
             }
-        });
+        }); */
 }
 }

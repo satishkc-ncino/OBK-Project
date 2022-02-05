@@ -2,18 +2,18 @@
  * @description       : 
  * @author            : Satish Chandrashekar
  * @group             : 
- * @last modified on  : 02-04-2022
+ * @last modified on  : 02-05-2022
  * @last modified by  : Satish Chandrashekar
 **/
 public with sharing class DonationsController {
     
-    @Auraenabled(cacheable = true)
+    @AuraEnabled(cacheable = true)
     public static void checkCustomer(){
         //Here Goes the Duplicate Check and Update File
         Boolean ok;
     }
 
-    @Auraenabled(cacheable = true)
+    @AuraEnabled(cacheable = true)
     public static String getURL(){
 
         //Declare Variables
